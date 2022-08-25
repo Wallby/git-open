@@ -28,6 +28,8 @@ There's two ways you can use `git open`..
 
 `git open <branch/commit> <path-to-file>` will open the file from the specified branch or commit
 
+*NOTE: the value that can be specified for `commit` here is displayed in the SHA1 ID box in gitk if selecting a commit (usually no more than the 10 first characters have to be copied, as long as there isn't any ambiguity with another commit it will suffice)*
+
 **Examples**
 
 If e.g. there is a file a.tif which was committed and now `git status` outputs..

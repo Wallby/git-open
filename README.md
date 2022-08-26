@@ -26,7 +26,7 @@ There's two ways you can use `git open`..
 * if the file at `path-to-file` is staged.. open the staged file
 * otherwise.. open the file from HEAD (i.e. normally the last commit)
 
-`git open <branch/commit> <path-to-file>` will open the file from the specified branch or commit
+`git open <branch/commit> <path-to-file>` will open the file from the specified branch or commit.
 
 *NOTE: the value that can be specified for `commit` here is displayed in the SHA1 ID box in gitk if selecting a commit (usually no more than the 10 first characters have to be copied, as long as there isn't any ambiguity with another commit it will suffice)*
 
@@ -49,10 +49,10 @@ Untracked files:
   (use "git add <file>..." to include in what will be committed)
         a.tif
 ```
-To open a.tif from the previous commit type `git open HEAD a.tif`  
-To open the staged a.tif type `git open a.tif`  
-To open the unstaged a.tif type `.\a.tif`
+To open a.tif from the previous commit type `git open HEAD a.tif`.  
+To open the staged a.tif type `git open a.tif`.  
+To open the unstaged a.tif type `.\a.tif`.
 
-To open a.tif from a specific commit type `git open <commit> a.tif`  
-To open a.tif from the commit before a specific commit type `git open <commit>~1 a.tif`  
-To open a.tif from the second to last commit type `git open HEAD~1 a.tif`
+To open a.tif from a specific commit type `git open <commit> a.tif`.  
+To open a.tif from the commit before a specific commit type `git open <commit>~1 a.tif`.  
+To open a.tif from the second to last commit type `git open HEAD~1 a.tif`.

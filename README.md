@@ -13,7 +13,7 @@ To setup the `git open` alias I recommed to..
 
 One line version of git-open.bat..
 ```
-@echo off & SETLOCAL enabledelayedexpansion & ( IF [%1]==[] EXIT ) & ( IF NOT [%3]==[] EXIT ) & ( IF [%2]==[] ( ( SET "branchOrCommit=" ) & ( SET "pathToFile=%1" ) ) ELSE ( ( SET "branchOrCommit=%1" ) & ( SET "pathToFile=%2" ) ) ) & (git show !branchOrCommit!:!pathToFile! > NUL || EXIT) & ( SET "a=$a=[System.IO.Path]::GetTempFileName(); Remove-Item $a; New-Item $a -ItemType \"Directory\" | Out-Null; cmd.exe /C (\"git show !branchOrCommit!:!pathToFile! ^> `\"\" + $a + \"\!pathToFile!`\"\"); $b=Start-Process -FilePath ($a + \"\!pathToFile!\"); Start-Sleep -Milliseconds 500; Remove-Item -Recurse $a;") & powershell.exe -Command "!a!"
+@echo off & SETLOCAL enabledelayedexpansion & ( IF [%1]==[] EXIT ) & ( IF NOT [%4]==[] EXIT ) & SET "a=0" & SET "b=0" & SET "interactive=0" & ( IF %1==-i SET "a=1" ) & ( IF %1==--interactive SET "a=1" ) & ( IF !a!==1 SET /A "b+=1" & SET "interactive=1" & SET "argument1=%2" & SET "argument2=%3" ) & SET "a=0" & ( IF "%2"=="-i" SET "a=1" ) & ( IF "%2"=="--interactive" SET "a=1" ) & ( IF !a!==1 SET /A "b+=1" & SET "interactive=1" & SET "argument1=%1" & SET "argument2=%3" ) & SET "a=0" & ( IF "%3"=="-i" SET "a=1" ) & ( IF "%3"=="--interactive" SET "a=1" ) & ( IF !a!==1 SET /A "b+=1" & SET "interactive=1" & SET "argument1=%1" & SET "argument2=%2" ) & ( IF !b! GTR 1 EXIT ) & ( IF !interactive!==0 SET "argument1=%1" & SET "argument2=%2" ) & ( IF [!argument2!]==[] ( ( SET "branchOrCommit=" ) & ( SET "pathToFile=!argument1!" ) ) ELSE ( ( SET "branchOrCommit=!argument1!" ) & ( SET "pathToFile=!argument2!" ) ) ) & (git show !branchOrCommit!:!pathToFile! > NUL || EXIT) & ( SET "a=$a=[System.IO.Path]::GetTempFileName(); Remove-Item $a; New-Item $a -ItemType \"Directory\" | Out-Null; cmd.exe /C (\"git show !branchOrCommit!:!pathToFile! ^> `\"\" + $a + \"\!pathToFile!`\"\"); $b = New-Object System.Diagnostics.Process;" ) & ( IF !interactive!==1 ( SET "a=!a! $b.StartInfo.Filename = \"openwith.exe\"; $b.StartInfo.Arguments = $a + \"\!pathToFile!\";" ) ELSE ( SET "a=!a! $b.StartInfo.Filename = $a + \"\!pathToFile!\";" ) ) & ( SET "a=!a! $b.start() ^| Out-Null;" ) & ( IF !interactive!==1 SET "a=!a! Wait-Process -InputObject $b;" ) & ( SET "a=!a! Start-Sleep -Milliseconds 500; Remove-Item -Recurse $a;" ) & powershell.exe -Command "!a!"
 ```
 
 **Usage**
@@ -29,6 +29,10 @@ There's two ways you can use `git open`..
 `git open <branch/commit> <path-to-file>` will open the file from the specified branch or commit
 
 *NOTE: the value that can be specified for `commit` here is displayed in the SHA1 ID box in gitk if selecting a commit (usually no more than the 10 first characters have to be copied, as long as there isn't any ambiguity with another commit it will suffice)*
+
+Regardless of which way of using `git open`, you can additionally provide the `-i/--interactive parameter` anywhere which will prompt for choosing a program with which to open the file instead of using the default program.
+
+*NOTE: e.g. `git open -i <branch/commit> <path-to-file>` and `git open <branch/commit> --interactive <path-to-file>` mean the same*
 
 **Examples**
 

@@ -44,16 +44,19 @@ SET a=$a=[System.IO.Path]::GetTempFileName();
 SET a=!a! Remove-Item $a;
 SET a=!a! New-Item $a -ItemType \"Directory\" ^| Out-Null;
 
-SET a=!a! cmd.exe /C (\"git show %branchOrCommit%:%pathToFile% ^> `\"\" + $a + \"\%pathToFile%`\"\");
-SET a=!a! $b = New-Object System.Diagnostics.Process;
+SET a=!a! $b=$a + (\"\%pathToFile%\" -replace '/','\');
+:: NOTE: create empty file first to assure all folder(s) within "tempfilename folder" if any is/are created
+SET a=!a! New-Item $b -Force ^| Out-Null;
+SET a=!a! cmd.exe /C (\"git show %branchOrCommit%:%pathToFile% ^> `\"\" + $b + \"`\"\");
+SET a=!a! $c=New-Object System.Diagnostics.Process;
 IF %interactive%==1 (
-	SET a=!a! $b.StartInfo.Filename = \"openwith.exe\";
-	SET a=!a! $b.StartInfo.Arguments = $a + \"\%pathToFile%\";
+	SET a=!a! $c.StartInfo.Filename = \"openwith.exe\";
+	SET a=!a! $c.StartInfo.Arguments = $b;
 ) ELSE (
-	SET a=!a! $b.StartInfo.Filename = $a + \"\%pathToFile%\";
+	SET a=!a! $c.StartInfo.Filename = $b;
 )
-SET a=!a! $b.start() ^| Out-Null;
-IF %interactive%==1 SET a=!a! Wait-Process -InputObject $b;
+SET a=!a! $c.start() ^| Out-Null;
+IF %interactive%==1 SET a=!a! Wait-Process -InputObject $c;
 ::                            ^
 ::                            wait for openwith.exe dialog to close
 SET a=!a! Start-Sleep -Milliseconds 500;
